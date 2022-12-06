@@ -12,4 +12,6 @@ fn main() {
     day03::main();
     println!("### day 04 ###");
     day04::main();
+    println!("### day 05 ###");
+    day05::main();
 }
