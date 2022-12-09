@@ -35,6 +35,13 @@ fn build_filesystem(input: &str) -> Vec<Node> {
                     });
                     current = tree.len() - 1;
                 }
+            } else {
+                tree.push(Node::Dir {
+                    children: Vec::new(),
+                    name: dirname.to_string(),
+                    parent: Some(current),
+                });
+                current = tree.len() - 1;
             }
         } else {
             let mut n = line.split_whitespace();
