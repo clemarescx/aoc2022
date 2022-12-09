@@ -1,6 +1,53 @@
 const INPUT: &str = include_str!("input.txt");
 pub(crate) fn main() {
     let tree = build_filesystem(INPUT);
+    part_one(&tree);
+    part_two(&tree);
+}
+
+fn part_two(tree: &[Node]) {
+    const TOTAL_DISK_SPACE: u32 = 70_000_000;
+    let used_disk_space = tree
+        .iter()
+        .find(|n| n.get_name() == "/")
+        .unwrap()
+        .get_size(tree);
+    let unused_disk_space = TOTAL_DISK_SPACE - used_disk_space;
+    let space_to_free = 30_000_000 - unused_disk_space;
+
+    let size_of_dir_to_delete = tree
+        .iter()
+        .filter_map(|n| {
+            if let Node::Dir { .. } = n {
+                if n.get_size(tree) >= space_to_free {
+                    Some(n.get_size(tree))
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        })
+        .min()
+        .unwrap();
+    println!("part two: {size_of_dir_to_delete}");
+}
+fn part_one(tree: &[Node]) {
+    let dirs_under_100k: u32 = tree
+        .iter()
+        .filter_map(|n| {
+            if let Node::Dir { .. } = n {
+                if n.get_size(tree) <= 100_000 {
+                    Some(n.get_size(tree))
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        })
+        .sum();
+    println!("part one: {dirs_under_100k}");
 }
 
 fn build_filesystem(input: &str) -> Vec<Node> {
